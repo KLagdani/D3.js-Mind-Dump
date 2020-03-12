@@ -135,32 +135,29 @@ export class Revenues extends Component {
     yAxisGroup.call(yAxisCall);
 
     //JOIN new data with old elements
-    const rects = g.selectAll("rect").data(data, d => d.month);
+    const rects = g.selectAll("circle").data(data, d => d.month);
 
     //EXIT old elements not present in new data
     rects
       .exit()
       .attr("fill", "grey")
       .transition(t)
-      .attr("y", y(0))
-      .attr("height", 0)
+      .attr("cy", y(0))
       .remove();
 
     //ENTER new elements present in new data
     rects
       .enter()
-      .append("rect")
-      .attr("x", d => x(d.month))
-      .attr("width", x.bandwidth)
+      .append("circle")
+      .attr("cx", d => x(d.month) + x.bandwidth() / 2)
+      .attr("r", 5)
       .attr("fill", "pink")
-      .attr("y", y(0))
+      .attr("cy", y(0))
       .attr("height", 0)
       .merge(rects)
       .transition(t)
-      .attr("x", d => x(d.month))
-      .attr("y", d => y(d[value]))
-      .attr("width", x.bandwidth)
-      .attr("height", d => height - y(d[value]));
+      .attr("cx", d => x(d.month) + x.bandwidth() / 2)
+      .attr("cy", d => y(d[value]));
 
     let label = flag ? "Revenue" : "Profit";
     yLabel.text(label);
